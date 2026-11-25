@@ -1,0 +1,23 @@
+[project]
+name = "studio-9agent-short-video"
+version = "2.0.0"
+description = "9-Agent AI Short-Film Studio with Local Chrome CDP Google Flow (Nano Banana + Veo) & PyAV Master Finishing"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "pydantic>=2.7.0",
+    "pillow>=10.0.0",
+    "httpx>=0.27.0",
+    "python-multipart>=0.0.9",
+    "av>=12.0.0",
+    "numpy>=1.26.0",
+    "edge-tts>=6.1.12",
+    "playwright>=1.45.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]

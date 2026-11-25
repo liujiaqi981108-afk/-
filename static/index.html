@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>9-Agent 影视级短视频制片厂工作台 · 本地 Google Flow 挂载与全流程成片引擎</title>
+  <meta name="description" content="工业级 9-Agent 短视频创作工作流：涵盖总导演色彩总谱、高概念剧作策划、24fps帧级6W1H分镜、1440x960角色正侧背三视图、三维场景母版、防穿模文生图、本地 Chrome 挂载 Google Flow (Nano Banana + Veo) 免API Key驱动与 PyAV 四轨声画剪辑成片。" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="studio-header">
+    <div class="header-top-row">
+      <div class="brand-group">
+        <h1 class="brand-title">9-Agent AI 短视频制片厂工作台</h1>
+        <span class="brand-tag">FULL PIPELINE · 剧作三视图 + 防穿模分镜 + 本地 Google Flow 真视频 &amp; 成片合成</span>
+      </div>
+      <div class="header-actions">
+        <span id="vendor-status-pill" class="vendor-indicator">引擎加载中…</span>
+        <button id="btn-quick-flow" class="btn btn-secondary btn-sm" title="一键挂载本机 Chrome 9222 端口驱动 Google Flow 与 Nano Banana">🌐 挂载本地 Google Flow</button>
+        <button id="btn-export-manifest" class="btn btn-secondary btn-sm" style="display:none;">导出 Phase 2 总单 (.json)</button>
+        <button id="btn-open-settings" class="btn btn-secondary btn-sm">模型与本地浏览器配置</button>
+      </div>
+    </div>
+    <nav id="agent-pipeline-rail" class="agent-rail" aria-label="9-Agent 实时片场状态轨"></nav>
+  </header>
+
+  <div class="studio-shell">
+    <!-- Left Studio Project Creation & History Sidebar -->
+    <aside class="control-sidebar" aria-label="项目立项与总控栏">
+      <section>
+        <h2 class="panel-heading">新建短视频制片工程</h2>
+        <div class="form-group">
+          <label class="form-label" for="input-topic">一句话创意 / 戏剧种子</label>
+          <textarea id="input-topic" class="form-textarea" rows="4" placeholder="输入故事创意，包含角色特征、随身信物或核心冲突…">暴风雪夜边关古驿站，左耳戴银铃耳坠、背负藏锋竹骨油纸伞的红衣侠女推门避寒，识破黑衣掌柜靴底无雪的伏击破绽后，旋身拔出伞中细剑劈落暗器</textarea>
+          <div class="preset-chips">
+            <button type="button" class="chip-btn" data-preset="暴风雪夜边关古驿站，左耳戴银铃耳坠、背负藏锋竹骨油纸伞的红衣侠女推门避寒，识破黑衣掌柜靴底无雪的伏击破绽后，旋身拔出伞中细剑劈落暗器">风雪古驿·伞剑侠女</button>
+            <button type="button" class="chip-btn" data-preset="赛博朋克霓虹雨夜地下修械铺，左耳戴钛银脉冲耳夹、腰挂改装黄铜机械怀表的机械少女识破黑市铁叔的陷阱，弹开全息星盘反控守卫">霓虹雨夜·怀表机械师</button>
+            <button type="button" class="chip-btn" data-preset="梅雨深夜街角旧书咖啡馆，颈挂复古旁轴胶片相机的女调查记者在店长递来热咖啡瞬间，从桌面积水倒影察觉暗门异动并按下快门取证">梅雨咖啡馆·胶片暗访</button>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="select-aspect">画幅构图比例</label>
+            <select id="select-aspect" class="form-select">
+              <option value="9:16" selected>9:16 竖屏短视频</option>
+              <option value="16:9">16:9 横屏宽银幕</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="input-duration">目标时长 (秒)</label>
+            <input id="input-duration" type="number" class="form-input" value="15" min="8" max="60" step="1" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="select-style">全片视觉介质锁 (01总导演宪章)</label>
+          <select id="select-style" class="form-select">
+            <option value="35mm 冷峻电影胶片写实" selected>35mm 冷峻电影胶片写实</option>
+            <option value="高精东方武侠电影光影质感">高精东方武侠电影光影质感</option>
+            <option value="赛博霓虹高反差潮湿胶片感">赛博霓虹高反差潮湿胶片感</option>
+            <option value="新海诚式高透光电影级动画">新海诚式高透光电影级动画</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="select-mode">人机协作执行模式</label>
+          <select id="select-mode" class="form-select">
+            <option value="hitl" selected>HITL 三道美术关卡精修把关 (推荐)</option>
+            <option value="auto">Auto 一键全自动贯通 Phase 1</option>
+          </select>
+        </div>
+
+        <button id="btn-create-project" class="btn btn-primary btn-block">开机立项 · 启动 9-Agent 协同</button>
+      </section>
+
+      <section>
+        <h2 class="panel-heading">历史制片工程列表</h2>
+        <div id="project-history-list" class="project-list"></div>
+      </section>
+    </aside>
+
+    <!-- Center 7-Workbench Studio Stage -->
+    <main class="studio-stage">
+      <div id="hitl-gate-banner" class="gate-banner" style="display:none;">
+        <div class="gate-banner-info">
+          <span id="gate-banner-title" class="gate-badge-title"></span>
+          <span id="gate-banner-desc" class="gate-badge-desc"></span>
+        </div>
+        <button id="btn-gate-approve" class="btn btn-primary"></button>
+      </div>
+
+      <div id="workbench-tabs" class="workbench-tabs" role="tablist">
+        <button class="tab-btn active" data-tab="tab-dramaturgy" role="tab">01 导演总谱 &amp; 剧作潜台词</button>
+        <button class="tab-btn" data-tab="tab-storyboard-script" role="tab">02 科学定长 &amp; 24fps 6W1H台本</button>
+        <button class="tab-btn" data-tab="tab-characters" role="tab">03 角色三视图 &amp; 五维声学坊</button>
+        <button class="tab-btn" data-tab="tab-scenes" role="tab">04 三维罗盘场景母版坊</button>
+        <button class="tab-btn" data-tab="tab-keyframes" role="tab">05 防穿模分镜画板 &amp; 作画监督质检</button>
+        <button class="tab-btn" data-tab="tab-post-manifest" role="tab">06 物理运镜 · 四轨声景 · 剪辑总单</button>
+        <button class="tab-btn" data-tab="tab-screening-room" role="tab">07 真视频生成 &amp; 成片放映室</button>
+      </div>
+
+      <div id="workbench-content" class="workbench-body">
+        <div class="empty-stage">
+          <h2 style="margin-top:0;">欢迎进入 9-Agent 顶级短视频制片厂工作台</h2>
+          <p style="color:var(--text-secondary);">
+            支持<strong>免 API Key 本地 Chrome 挂载 Google Flow (Nano Banana 多参考垫图文生图 + Omni Flash / Veo 首尾帧图生视频)</strong>，并内置 <code>edge-tts</code> 中文神经配音、四轨材质拟音与 <code>PyAV</code> 黄金安全区字幕自动合片。
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Live 9-Agent Telemetry Feed -->
+    <aside class="telemetry-dock" aria-label="9-Agent 实时片场协作日志">
+      <div class="dock-header">
+        <span>9-Agent 实时监修流 (SSE)</span>
+        <span id="stage-pill" class="pill">IDLE</span>
+      </div>
+      <div id="agent-log-feed" class="log-feed"></div>
+    </aside>
+  </div>
+
+  <!-- Provider Settings Modal -->
+  <dialog id="modal-settings" class="studio-modal">
+    <div class="section-card-header">
+      <h3 class="section-card-title">本地 Chrome (Google Flow 免Key) &amp; 多厂商 API 热切换</h3>
+      <button id="btn-close-settings" class="btn btn-secondary btn-sm">关闭</button>
+    </div>
+
+    <div class="kv-box" style="margin-bottom:14px;border-color:rgba(224,159,62,0.45);">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+        <strong style="color:var(--accent-amber);">🌐 本地部署零 API Key 方案：挂载本机 Chrome 登录态驱动 Google Flow + Nano Banana</strong>
+        <button id="btn-check-flow-cdp" type="button" class="btn btn-secondary btn-sm">🔍 检测本地 Chrome 9222 连接</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">
+        先在本机终端运行 <code>python scripts/launch_local_chrome.py</code>，在弹出的 Chrome 窗口手动登录一次 Google Flow (<code>labs.google/fx/tools/flow</code>)，即可将下方生图/视频引擎切为 <code>flow_browser</code> 自动垫图生图、首尾帧生视频并下载合片！
+      </div>
+      <div class="form-row-2">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" for="cfg-flow-cdp">本地 Chrome CDP 调试地址</label>
+          <input id="cfg-flow-cdp" type="text" class="form-input" value="http://127.0.0.1:9222" placeholder="http://127.0.0.1:9222" />
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">当前连接诊断</label>
+          <div id="flow-cdp-status-box" style="font-size:12px;padding:8px 10px;background:var(--bg-surface-2);border-radius:5px;color:var(--text-secondary);">点击右上角「检测连接」查看本机 Chrome 状态</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row-2">
+      <div class="form-group">
+        <label class="form-label" for="cfg-llm-vendor">文本/多模态质检厂商 (LLM &amp; VLM)</label>
+        <select id="cfg-llm-vendor" class="form-select">
+          <option value="mock">mock (本地免Key导演/编剧/质检引擎)</option>
+          <option value="gemini">gemini (Google Gemini 2.5)</option>
+          <option value="volcengine">volcengine (火山方舟 Doubao)</option>
+          <option value="dashscope">dashscope (阿里百炼 Qwen)</option>
+          <option value="openai">openai (OpenAI / DeepSeek 兼容接口)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cfg-img-vendor">三视图与多参考垫图文生图厂商 (T2I)</label>
+        <select id="cfg-img-vendor" class="form-select">
+          <option value="mock">mock (本地离线三视图/分镜渲染器)</option>
+          <option value="flow_browser">flow_browser (本地 Chrome 挂载 Nano Banana 免Key)</option>
+          <option value="volcengine">volcengine (即梦 Seedream 主体参考)</option>
+          <option value="kling">kling (快手可灵 Kolors 主体锁脸)</option>
+          <option value="dashscope">dashscope (通义万相 Wanx 2.1)</option>
+          <option value="openai">openai (gpt-image-1)</option>
+          <option value="gemini">gemini (Google Imagen 3 API)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row-2">
+      <div class="form-group">
+        <label class="form-label" for="cfg-vid-vendor">图生视频 / 首尾双帧插值厂商 (I2V &amp; KF2V)</label>
+        <select id="cfg-vid-vendor" class="form-select">
+          <option value="mock">mock (本地 PyAV 光学视差测试视频流)</option>
+          <option value="flow_browser">flow_browser (本地 Chrome 挂载 Google Flow Frames 免Key)</option>
+          <option value="volcengine">volcengine (即梦 Seedance 1.0 Pro 首尾帧)</option>
+          <option value="kling">kling (快手可灵 Kling v1.6 首尾帧)</option>
+          <option value="dashscope">dashscope (通义万相 Wan 2.1 I2V)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cfg-tts-vendor">角色配音合成引擎 (TTS)</label>
+        <select id="cfg-tts-vendor" class="form-select">
+          <option value="edge_tts">edge_tts (微软免费中文神经语音 Xiaoxiao/Yunjian)</option>
+          <option value="mock">mock (纯离线谐波合成语音)</option>
+        </select>
+      </div>
+    </div>
+
+    <details style="margin-bottom:12px;">
+      <summary style="cursor:pointer;font-size:12.5px;color:var(--text-secondary);">展开可选商业云端 API Key 配置（使用本地 Google Flow 模式无需填写）</summary>
+      <div style="margin-top:10px;">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="cfg-volc-key">火山方舟 / 即梦 API Key</label>
+            <input id="cfg-volc-key" type="password" class="form-input" placeholder="VOLC_API_KEY" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cfg-dash-key">阿里云百炼万相 API Key</label>
+            <input id="cfg-dash-key" type="password" class="form-input" placeholder="DASHSCOPE_API_KEY" />
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="cfg-kling-ak">快手可灵 Access Key</label>
+            <input id="cfg-kling-ak" type="text" class="form-input" placeholder="KLING_ACCESS_KEY" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cfg-kling-sk">快手可灵 Secret Key</label>
+            <input id="cfg-kling-sk" type="password" class="form-input" placeholder="KLING_SECRET_KEY" />
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="cfg-openai-key">OpenAI 兼容 API Key</label>
+            <input id="cfg-openai-key" type="password" class="form-input" placeholder="OPENAI_API_KEY" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cfg-gemini-key">Google Gemini API Key</label>
+            <input id="cfg-gemini-key" type="password" class="form-input" placeholder="GEMINI_API_KEY" />
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:12px;">
+      <button id="btn-save-settings" class="btn btn-primary">保存并热切换适配器</button>
+    </div>
+  </dialog>
+
+  <!-- Full-Resolution Image Lightbox Modal -->
+  <dialog id="modal-lightbox" class="lightbox-modal">
+    <img id="lightbox-img" src="" alt="高清设定图预览" />
+  </dialog>
+
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+workspaces/
+.chrome_flow_profile/
+.venv/
+venv/
+*.egg-info/
+.env
+*.tmp

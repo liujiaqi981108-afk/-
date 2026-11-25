@@ -1,0 +1,73 @@
+{
+  "flow_urls": [
+    "https://labs.google/fx/tools/flow",
+    "https://flow.google.com"
+  ],
+  "new_project_triggers": [
+    "button:has-text('New project')",
+    "button:has-text('Create project')",
+    "button:has-text('新建项目')",
+    "a:has-text('New project')",
+    "[aria-label*='New project' i]"
+  ],
+  "image_mode_triggers": [
+    "button[role='tab']:has-text('Image')",
+    "button[role='tab']:has-text('Images')",
+    "button:has-text('Create Image')",
+    "button:has-text('Nano Banana')",
+    "[aria-label*='Image mode' i]"
+  ],
+  "video_mode_triggers": [
+    "button[role='tab']:has-text('Video')",
+    "button[role='tab']:has-text('Videos')",
+    "button:has-text('Frames to Video')",
+    "[aria-label*='Video mode' i]"
+  ],
+  "frames_submode_triggers": [
+    "button:has-text('Frames')",
+    "[role='tab']:has-text('Frames')",
+    "button:has-text('Frames to Video')",
+    "button:has-text('首尾帧')"
+  ],
+  "ingredients_submode_triggers": [
+    "button:has-text('Ingredients')",
+    "[role='tab']:has-text('Ingredients')",
+    "button:has-text('Ingredients to Video')"
+  ],
+  "start_frame_triggers": [
+    "button:has-text('Add start frame')",
+    "button:has-text('Start frame')",
+    "button:has-text('First frame')",
+    "[aria-label*='start frame' i]",
+    "[aria-label*='first frame' i]"
+  ],
+  "end_frame_triggers": [
+    "button:has-text('Add end frame')",
+    "button:has-text('End frame')",
+    "button:has-text('Last frame')",
+    "[aria-label*='end frame' i]",
+    "[aria-label*='last frame' i]"
+  ],
+  "reference_upload_triggers": [
+    "button:has-text('Add ingredient')",
+    "button:has-text('Upload')",
+    "[aria-label*='Upload' i]",
+    "[aria-label*='Add image' i]",
+    "[aria-label*='reference' i]"
+  ],
+  "prompt_inputs": [
+    "textarea[placeholder*='Describe' i]",
+    "textarea[placeholder*='prompt' i]",
+    "textarea[placeholder*='Generate' i]",
+    "textarea",
+    "div[contenteditable='true'][role='textbox']",
+    "div[contenteditable='true']"
+  ],
+  "generate_buttons": [
+    "button:has-text('Generate')",
+    "button[aria-label*='Generate' i]",
+    "button[aria-label*='Submit' i]",
+    "button:has-text('Create')",
+    "button:has-text('生成')"
+  ]
+}
